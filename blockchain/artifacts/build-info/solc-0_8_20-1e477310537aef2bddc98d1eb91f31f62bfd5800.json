@@ -1,0 +1,35 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_20-1e477310537aef2bddc98d1eb91f31f62bfd5800",
+  "solcVersion": "0.8.20",
+  "solcLongVersion": "0.8.20+commit.a1b79de6",
+  "userSourceNameMap": {
+    "contracts/DeviceAccess.sol": "project/contracts/DeviceAccess.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "shanghai",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/DeviceAccess.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\ncontract DeviceAccess {\r\n\r\n    struct Device {\r\n        bool registered;\r\n        mapping(string => bool) permissions;\r\n    }\r\n\r\n    mapping(address => Device) private devices;\r\n\r\n    event DeviceRegistered(address device);\r\n    event PermissionGranted(address device, string resource);\r\n    event AccessChecked(address device, string resource, bool allowed);\r\n\r\n    function registerDevice(address device) public {\r\n        devices[device].registered = true;\r\n        emit DeviceRegistered(device);\r\n    }\r\n\r\n    function grantPermission(address device, string memory resource) public {\r\n        require(devices[device].registered, \"Device not registered\");\r\n        devices[device].permissions[resource] = true;\r\n        emit PermissionGranted(device, resource);\r\n    }\r\n\r\n    function checkAccess(address device, string memory resource) public returns(bool) {\r\n        bool allowed = devices[device].registered &&\r\n                       devices[device].permissions[resource];\r\n\r\n        emit AccessChecked(device, resource, allowed);\r\n        return allowed;\r\n    }\r\n}\r\n"
+      }
+    }
+  }
+}

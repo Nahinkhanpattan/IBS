@@ -1,18 +1,8 @@
-import hre from "hardhat";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const hre = require("hardhat");
+const fs = require("fs");
+const path = require("path");
 
 async function main() {
-    console.log("Deploying contract...");
-    // Check if ethers is available
-    if (!hre.ethers) {
-        throw new Error("hre.ethers is NOT defined. Plugin not loaded?");
-    }
-
     const DeviceAccess = await hre.ethers.getContractFactory("DeviceAccess");
     const deviceAccess = await DeviceAccess.deploy();
 
@@ -27,12 +17,9 @@ async function main() {
         fs.mkdirSync(configDir, { recursive: true });
     }
 
-    const artifactPath = path.join(__dirname, "../artifacts/contracts/DeviceAccess.sol/DeviceAccess.json");
-    const artifact = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
-
     const contractData = {
         address: address,
-        abi: artifact.abi
+        abi: JSON.parse(fs.readFileSync(path.join(__dirname, "../artifacts/contracts/DeviceAccess.sol/DeviceAccess.json"), "utf8")).abi
     };
 
     fs.writeFileSync(
