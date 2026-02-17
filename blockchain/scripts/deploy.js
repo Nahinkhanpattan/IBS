@@ -8,9 +8,10 @@ const __dirname = path.dirname(__filename);
 
 async function main() {
     console.log("Deploying contract...");
-    // Check if ethers is available
+
+    // In ESM with hardhat-ethers, hre.ethers should be available if plugin is loaded
     if (!hre.ethers) {
-        throw new Error("hre.ethers is NOT defined. Plugin not loaded?");
+        throw new Error("hre.ethers is NOT defined. Ensure 'import \"@nomicfoundation/hardhat-ethers\";' is in hardhat.config.js");
     }
 
     const DeviceAccess = await hre.ethers.getContractFactory("DeviceAccess");
@@ -21,7 +22,6 @@ async function main() {
     const address = await deviceAccess.getAddress();
     console.log("DeviceAccess deployed to:", address);
 
-    // Save address and ABI for server usage
     const configDir = path.join(__dirname, "../../server/src/config");
     if (!fs.existsSync(configDir)) {
         fs.mkdirSync(configDir, { recursive: true });
