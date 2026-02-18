@@ -11,4 +11,9 @@ app.use(express.json());
 app.use("/api/devices", deviceRoutes);
 app.use("/api/access", accessRoutes);
 
+
+app.get("/", (req, res) => {
+    res.send("Server is running");
+});
+
 module.exports = app;
